@@ -1,0 +1,258 @@
+# =============================================================================
+# SimpleVLA-RL / SAGA — CUDA image for NVIDIA H100 + Enroot/Pyxis
+# Counterpart of simplevla-rl-rocm.def, ported from rocm/primus -> NGC PyTorch.
+#
+# Versions are aligned to the user's working AMD env (pip list reference) and
+# openvla-oft's pyproject.toml. Notably:
+#   - transformers pinned to 4.44.0 from PyPI (matches AMD env binary state).
+#     The moojink/transformers-openvla-oft fork's HEAD is on 4.40.x, so we
+#     don't pull the fork; if runtime hits a missing bidir-attn symbol, swap
+#     Stage B to the fork at a 4.44-base commit.
+#   - dlimp comes from moojink/dlimp_openvla (RLDS-side helpers)
+#   - openvla-oft itself is editable-installed --no-deps, so `prismatic` is
+#     registered as a real package (matches AMD env)
+#
+# Build (from openvla-oft-yhs repo root):
+#     docker build -t simplevla-rl-cuda:saga \
+#         -f SimpleVLA-RL/docker/Dockerfile.h100 .
+#
+# Convert to enroot squashfs:
+#     enroot import -o simplevla-rl-cuda-saga.sqsh dockerd://simplevla-rl-cuda:saga
+# =============================================================================
+
+# NGC PyTorch 24.10: CUDA 12.6.2, PyTorch 2.5.0a0+, NCCL 2.22, flash-attn ~2.6,
+# transformer-engine, cuDNN 9, all built for sm_90 (Hopper).
+ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:24.10-py3
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    TOKENIZERS_PARALLELISM=false \
+    ROBOT_PLATFORM=LIBERO \
+    # MuJoCo / PyOpenGL — use NVIDIA EGL for GPU-accelerated headless rendering.
+    # AMD/ROCm couldn't do this and fell back to MUJOCO_GL=osmesa (software/CPU);
+    # on H100 we want real GPU rendering inside LIBERO rollouts. The libosmesa6
+    # package below stays as a fallback, but is not used unless MUJOCO_GL changes.
+    MUJOCO_GL=egl \
+    PYOPENGL_PLATFORM=egl \
+    # NVIDIA Container Toolkit / enroot hook reads these to decide which host
+    # driver libs to inject. "graphics" is REQUIRED for EGL to find
+    # libEGL_nvidia.so.0 — without it MuJoCo silently falls back to CPU.
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+
+# -----------------------------------------------------------------------------
+# 1. System deps
+#    - libegl1 + libglvnd0: GLVND dispatcher; at runtime the NVIDIA container
+#      hook injects libEGL_nvidia.so.0 from the host, GLVND auto-loads it.
+#    - libegl1-mesa / libosmesa6 kept only as software fallback; not used while
+#      MUJOCO_GL=egl. Packages are small.
+#    - RDMA libs help NCCL on multi-NIC nodes (no-op on single-node H100 boxes).
+# -----------------------------------------------------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git cmake gcc g++ make pkg-config wget curl ca-certificates \
+        libglvnd0 libglvnd-dev \
+        libegl1 libgl1 libgles2 \
+        libegl1-mesa libgl1-mesa-glx libgles2-mesa \
+        libosmesa6 libosmesa6-dev \
+        libglew-dev libglfw3 libglfw3-dev \
+        libdrm-dev libpci-dev pciutils \
+        librdmacm1 libibverbs-dev libibverbs1 ibverbs-providers ibverbs-utils rdma-core \
+        libnuma-dev numactl \
+        ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN if [ -f /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so ]; then \
+        mv /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so \
+           /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so.inbox ; \
+        ldconfig ; \
+    fi
+
+# -----------------------------------------------------------------------------
+# 2. veRL (v0.2.x) — install without deps so NGC's torch/CUDA aren't disturbed
+# -----------------------------------------------------------------------------
+RUN cd / && git clone -b v0.2.x https://github.com/volcengine/verl.git verl_upstream \
+    && cd verl_upstream \
+    && pip install -e . --no-deps
+
+# -----------------------------------------------------------------------------
+# 3. OFT/veRL deps — installed in 6 STAGES to avoid pip resolver wars.
+#
+#    Stage A: lock numpy / ml-dtypes / tensorflow-cpu first. TF 2.15 requires
+#             numpy<2; ml-dtypes 0.2.0 matches AMD env. After this, numpy is
+#             pinned at 1.24.4 for everyone downstream.
+#
+#    Stage B: install transformers==4.44.0 (PyPI) BEFORE peft. peft 0.17 has
+#             a transformers minimum-version constraint and pip would otherwise
+#             pull the latest (transformers 5.x) and rip the install. Pinning
+#             4.44.0 first satisfies peft and matches the AMD env binary state.
+#             tokenizers==0.19.1 pinned alongside.
+#
+#    Stage C: bulk python deps. opencv-python==4.9.0.80 + a typing-stub patch
+#             after Stage E. Reason: every opencv-python 4.7-4.10 wheel ships
+#             a typing stub that references the removed `cv2.dnn.DictValue` →
+#             `import cv2` raises AttributeError on load. Fixed in 4.11+ but
+#             4.11+ requires numpy>=2 (collides with our locked numpy 1.24.4).
+#             We pin to the most stable 4.9 wheel and sed-patch the one bad
+#             line; cv2 functionality is unaffected, only typing precision.
+#
+#    Stage D: tensorflow_graphics + tensorflow-addons via --no-deps. Their
+#             metadata says `tensorflow>=2.2.0`, which pip otherwise resolves
+#             to TF 2.21 (numpy>=2 → wrecks Stage A). Manually add the small
+#             deps they actually need: trimesh / openexr / typeguard.
+#
+#    Stage E: dlimp + open_clip via --no-deps (torch + numpy already locked).
+#
+#    Stage F: verl runtime deps (codetiming / hydra / ray / tensordict / etc.).
+# -----------------------------------------------------------------------------
+
+# Stage A — foundation
+# tensorflow-cpu 2.15.0 ships with ml-dtypes~=0.2.0 (matches AMD env);
+# 2.15.1 patched the constraint to ml-dtypes~=0.3.1 → would break Stage C's
+# tensorflow-graphics/datasets which AMD env has on 0.2.0.
+RUN pip install \
+        "numpy==1.24.4" \
+        "ml-dtypes==0.2.0" \
+        "tensorflow-cpu==2.15.0"
+
+# Stage B — transformers BEFORE peft, with tokenizers pinned.
+# AMD env has transformers==4.44.0 (binary state; whether from PyPI or a
+# rebased moojink fork doesn't matter at runtime — same code). The moojink
+# fork's HEAD is currently still on 4.40.x base, so cloning it gives the wrong
+# version. Use PyPI 4.44.0 directly to match the AMD env. If runtime hits an
+# OFT bidirectional-attn ImportError, swap this for the fork at a 4.44 commit.
+RUN pip install --no-deps "tokenizers==0.19.1" \
+    && pip install --no-deps "transformers==4.44.0" \
+    && pip install --no-deps regex sacremoses safetensors filelock requests pyyaml tqdm
+
+# Stage C — bulk OFT deps (numpy/transformers/tf already locked)
+RUN pip install \
+        "accelerate==1.12.0" \
+        "draccus==0.8.0" \
+        "einops==0.8.1" \
+        "huggingface-hub==0.36.0" \
+        "json-numpy==2.1.1" \
+        "jsonlines==4.0.0" \
+        "matplotlib" \
+        "peft==0.17.0" \
+        "protobuf==4.21.12" \
+        "rich" \
+        "sentencepiece==0.1.99" \
+        "timm==0.9.10" \
+        "wandb==0.23.1" \
+        "tensorflow_datasets==4.9.3" \
+        "diffusers==0.30.2" \
+        "imageio==2.37.2" "imageio-ffmpeg==0.6.0" \
+        "uvicorn" "fastapi" \
+        "opencv-python==4.9.0.80" \
+        "mujoco==3.4.0" \
+        "h5py==3.15.1" \
+        "numba==0.63.1" \
+        "scikit-image==0.25.2" \
+        "scikit-learn" \
+        "mergedeep" \
+        "ftfy"
+
+# Stage D — tensorflow_graphics + addons (no-deps so they can't pull TF 2.21)
+RUN pip install --no-deps "tensorflow_graphics==2021.12.3" \
+    && pip install --no-deps "tensorflow-addons==0.23.0" \
+    && pip install --no-deps "typeguard==2.13.3" \
+    && pip install "trimesh" "openexr"
+
+# Stage E — dlimp + open_clip
+RUN pip install --no-deps "git+https://github.com/moojink/dlimp_openvla" \
+    && pip install --no-deps "open_clip_torch" \
+    && pip install funcy
+
+# Patch opencv-python typing stub bug. opencv-python 4.7-4.10 wheels reference
+# cv2.dnn.DictValue in cv2/typing/__init__.py, but that symbol was removed from
+# the binary at some point in the 4.7-4.9 range — every `import cv2` crashes
+# with AttributeError. Fixed in 4.11+, but 4.11+ requires numpy>=2 which is
+# incompatible with our locked tf-cpu 2.15. Robust workaround: rewrite the one
+# offending line so cv2 loads cleanly. Type hints lose precision (LayerId is
+# now NoneType) but no runtime feature is affected.
+# Use pip show (metadata-only, no import) to find cv2's install dir, since
+# `import cv2` is exactly what's broken until we patch it.
+RUN CV2_DIR="$(pip show opencv-python | awk '/^Location:/ {print $2}')/cv2" \
+    && CV2_TYPING="$CV2_DIR/typing/__init__.py" \
+    && echo "Patching $CV2_TYPING" \
+    && test -f "$CV2_TYPING" \
+    && sed -i 's|^LayerId = cv2.dnn.DictValue.*$|LayerId = type(None)  # patched: cv2.dnn.DictValue removed in this opencv binary|' "$CV2_TYPING" \
+    && python -c "import cv2; print('cv2', cv2.__version__, 'imports cleanly')"
+
+# Stage F — verl runtime deps
+RUN pip install \
+        codetiming \
+        datasets \
+        dill \
+        hydra-core \
+        pandas \
+        "pyarrow>=15.0.0" \
+        pybind11 \
+        pylatexenc \
+        "ray[default]>=2.10" \
+        tensordict \
+        "protobuf==4.21.12"
+
+# tensordict patch for newer torch (mirrors ROCm def)
+RUN MEMMAP_FILE=$(python -c "import tensordict, os; print(os.path.join(os.path.dirname(tensordict.__file__), 'memmap.py'))") \
+    && if [ -f "$MEMMAP_FILE" ]; then \
+        sed -i 's/from torch.multiprocessing.reductions import ForkingPickler/try:\n    from torch.multiprocessing.reductions import ForkingPickler\nexcept ImportError:\n    from multiprocessing.reduction import ForkingPickler/' "$MEMMAP_FILE" ; \
+    fi
+
+# -----------------------------------------------------------------------------
+# 4. LIBERO (clone + editable install, pre-create config to skip prompt)
+# -----------------------------------------------------------------------------
+RUN cd / && git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git \
+    && touch LIBERO/libero/__init__.py \
+    && pip install -e LIBERO \
+    && pip install "robosuite==1.4.1" "bddl==3.6.0" easydict cloudpickle "gym==0.26.2" \
+    && pip install "numpy==1.24.4"
+
+RUN mkdir -p /root/.libero && python -c "\
+import os, yaml; \
+root='/LIBERO/libero/libero'; \
+config={'benchmark_root': root, \
+        'bddl_files': os.path.join(root, 'bddl_files'), \
+        'init_states': os.path.join(root, 'init_files'), \
+        'datasets':    os.path.join(root, '../datasets'), \
+        'assets':      os.path.join(root, 'assets')}; \
+open('/root/.libero/config.yaml','w').write(yaml.dump(config))"
+
+# -----------------------------------------------------------------------------
+# 5. Bake the project code (this fork) and editable-install openvla-oft
+#    Build context MUST be the openvla-oft-yhs repo root.
+# -----------------------------------------------------------------------------
+WORKDIR /workspace
+COPY . /workspace/openvla-oft-yhs
+
+# Editable install of the user's openvla-oft fork. --no-deps because we already
+# resolved every dep above; the goal here is just to register prismatic et al.
+# as proper packages (matches "openvla-oft 0.0.1 (editable, ...)" in AMD env).
+RUN pip install -e /workspace/openvla-oft-yhs --no-deps
+
+ENV PYTHONPATH=/workspace/openvla-oft-yhs:/workspace/openvla-oft-yhs/SimpleVLA-RL:/verl_upstream:${PYTHONPATH}
+
+# -----------------------------------------------------------------------------
+# 6. Caches — point to /tmp so they're writable on read-only enroot mounts
+# -----------------------------------------------------------------------------
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache \
+    TRITON_CACHE_DIR=/tmp/triton_cache \
+    HF_HOME=/tmp/hf_cache \
+    TRANSFORMERS_CACHE=/tmp/hf_cache
+
+# -----------------------------------------------------------------------------
+# 7. Sanity checks at build time — fail fast if a key import is broken
+# -----------------------------------------------------------------------------
+RUN python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda)" \
+    && python -c "import numpy; assert numpy.__version__.startswith('1.24'), numpy.__version__; print('numpy', numpy.__version__)" \
+    && python -c "import tensorflow as tf; assert tf.__version__.startswith('2.15'), tf.__version__; print('tf', tf.__version__)" \
+    && python -c "import transformers; assert transformers.__version__.startswith('4.44'), transformers.__version__; print('transformers', transformers.__version__)" \
+    && python -c "import flash_attn; print('flash_attn', flash_attn.__version__)" \
+    && python -c "import verl, libero, dlimp, diffusers, peft, timm, tensorflow_datasets, tensorflow_graphics, mujoco, cv2" \
+    && python -c "from prismatic.models import action_heads; print('prismatic OK')"
+
+WORKDIR /workspace/openvla-oft-yhs/SimpleVLA-RL
+CMD ["/bin/bash"]

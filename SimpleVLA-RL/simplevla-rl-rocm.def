@@ -1,0 +1,108 @@
+Bootstrap: docker
+From: rocm/primus:v26.1
+
+%files
+    # No additional files needed; all setup is done in %post
+
+%environment
+    export PATH="/opt/ompi/bin:/opt/ucx/bin:/opt/rocm/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:/opt/rocm/lib:/opt/ompi/lib:/opt/ucx/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/libibverbs:$LD_LIBRARY_PATH"
+    # SimpleVLA-RL / LIBERO (default OSMesa for headless/container without /dev/dri)
+    export MUJOCO_GL=osmesa
+    export PYOPENGL_PLATFORM=osmesa
+    export ROBOT_PLATFORM=LIBERO
+    export TOKENIZERS_PARALLELISM=false
+
+%post
+    # System deps (RDMA, build tools)
+    apt-get update
+    apt-get install -y  \
+            librdmacm1 libibverbs-dev libibverbs1 ibverbs-providers ibverbs-utils rdma-core \
+            git cmake gcc g++ make \
+            automake autoconf libtool \
+            pkg-config numactl libnuma-dev librdmacm-dev \
+            flex bison wget curl libdrm-dev libibumad-dev \
+            pciutils ethtool libpci-dev \
+            libosmesa6 libosmesa6-dev libegl1-mesa libgl1-mesa-glx libgles2-mesa
+
+    # Fix bnxt_re-rdmav34.so issue
+    echo "=== Fixing bnxt_re-rdmav34.so issue... ==="
+    mv /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so.inbox 2>/dev/null || true
+    ldconfig
+
+    # # aiter/apex look for HIP version file; primus is ROCm 7.1.0. Create so path exists (avoids host HIP_PATH 7.2 leaking in).
+    # ROCM_VER=7.1.0
+    # mkdir -p /opt/rocm/share/hip
+    # echo "$ROCM_VER" > /opt/rocm/share/hip/version
+    # mkdir -p /opt/rocm-7.1.0/share/hip
+    # echo "$ROCM_VER" > /opt/rocm-7.1.0/share/hip/version
+
+    # --- veRL (v0.2.x): install without deps so primus Torch/ROCm stay intact ---
+    # veRL's pyproject.toml pulls vllm/CUDA; we install only the package then add safe deps.
+    cd /
+    git clone -b v0.2.x https://github.com/volcengine/verl.git
+    cd verl
+    pip3 install -e . --no-deps
+    cd ..
+    # veRL runtime deps (no torch, no vllm, no nvidia-*); primus provides torch.
+    pip3 install accelerate codetiming datasets dill hydra-core "numpy<2" pandas \
+        "pyarrow>=15.0.0" pybind11 pylatexenc "ray[default]>=2.10" \
+        tensordict transformers wandb
+    # Optional: reinstall triton-rocm if base image expects it
+    pip3 install --force-reinstall triton-rocm==3.6.0 --index-url https://download.pytorch.org/whl/rocm7.1 2>/dev/null || true
+
+    # --- Pin OFT/critical versions (SETUP_ROCM Step 4) ---
+    pip3 install transformers==4.40.1 tokenizers==0.19.1 timm==0.9.16 "numpy<2"
+    pip3 install peft==0.11.1
+    
+
+    # --- Fix tensordict for torch 2.10 (Step 5) ---
+    MEMMAP_FILE=$(python3 -c "import tensordict; import os; print(os.path.join(os.path.dirname(tensordict.__file__), 'memmap.py'))" 2>/dev/null) || true
+    if [ -n "$MEMMAP_FILE" ] && [ -f "$MEMMAP_FILE" ]; then
+        sed -i 's/from torch.multiprocessing.reductions import ForkingPickler/try:\n    from torch.multiprocessing.reductions import ForkingPickler\nexcept ImportError:\n    from multiprocessing.reduction import ForkingPickler/' "$MEMMAP_FILE"
+    fi
+
+    # --- LIBERO (Step 6) ---
+    cd /
+    git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git
+    touch LIBERO/libero/__init__.py
+    pip3 install -e LIBERO
+    pip3 install "imageio[ffmpeg]" robosuite==1.4.1 bddl easydict cloudpickle gym
+    pip3 install "numpy<2"
+
+    # Pre-create LIBERO config to avoid interactive dataset path prompt
+    mkdir -p /root/.libero
+    python3 -c "
+import os, yaml
+root = '/LIBERO/libero/libero'
+config = {
+    'benchmark_root': root,
+    'bddl_files': os.path.join(root, 'bddl_files'),
+    'init_states': os.path.join(root, 'init_files'),
+    'datasets': os.path.join(root, '../datasets'),
+    'assets': os.path.join(root, 'assets'),
+}
+with open('/root/.libero/config.yaml', 'w') as f:
+    yaml.dump(config, f)
+"
+
+    # --- OpenVLA-OFT deps only, do NOT pip install -e . (Step 7, keeps torch intact) ---
+    cd /
+    git clone https://github.com/moojink/openvla-oft.git
+    pip3 install draccus==0.8.0 "sentencepiece>=0.1.99"
+    pip3 install json-numpy tensorflow-cpu==2.15.1
+
+    # --- Analysis deps (Step 8) ---
+    pip3 install matplotlib scikit-learn
+    # Explicit deps used by analysis/ and test_libero_render_backend (yaml, OSMesa/EGL)
+    pip3 install pyyaml safetensors
+
+%runscript
+    exec "$@"
+
+%help
+    SimpleVLA-RL on AMD MI300X (ROCm), following SETUP_ROCM.md.
+    Torch is not installed in this def; use a base that has ROCm PyTorch or install
+    after build: pip3 install torch torchvision --index-url https://download.pytorch.org/whl/rocm7.1
+    At run time set: MUJOCO_GL=egl, ROBOT_PLATFORM=LIBERO; for Slurm set
+    HIP_VISIBLE_DEVICES=$ROCR_VISIBLE_DEVICES if needed.

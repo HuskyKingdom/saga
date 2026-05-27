@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(conda env:*)",
+      "Bash(pip list:*)",
+      "Bash(find /home/yuhang/.miniconda3 -path */libero* -name *.py)",
+      "Bash(ls /home/yuhang/.miniconda3/envs/genesis/lib/python*/site-packages/)",
+      "Bash(ls /home/yuhang/.miniconda3/envs/main/lib/python*/site-packages/)",
+      "Bash(find /home/yuhang/.miniconda3/envs/main -path *libero* -name *.py)",
+      "Bash(conda info:*)",
+      "Bash(ls /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/examples/run_openvla_oft_hpid*)",
+      "Bash(grep -E \"\\\\.py$\")",
+      "Bash(chmod +x /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/docker/build_h100.sh)",
+      "Bash(chmod +x /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/examples/run_saga_h100.sh)",
+      "Bash(chmod +x /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/saga_rl_trail_h100.sh)",
+      "Bash(bash -n /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/docker/build_h100.sh)",
+      "Bash(bash -n /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/examples/run_saga_h100.sh)",
+      "Bash(bash -n /home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL/saga_rl_trail_h100.sh)",
+      "Bash(python3 -c \"from libero.libero.envs import OffScreenRenderEnv; import inspect; print\\(inspect.getfile\\(OffScreenRenderEnv\\)\\)\")",
+      "Bash(python3 -c ' *)"
+    ],
+    "additionalDirectories": [
+      "/home/yuhang/Desktop/oft-workspace/openvla-oft-yhs/SimpleVLA-RL"
+    ]
+  }
+}

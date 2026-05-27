@@ -1,0 +1,575 @@
+[
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl between the plate and the ramekin and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the gripper directly above the plate", "expected_effect": "robot base positioned on top of the plate"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the end-effector with the black bowl", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Grasp the black bowl from the table", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Hover the manipulator over the plate", "expected_effect": "gripper positioned above the plate surface"},
+        {"step": 5, "action_type": "place", "subgoal": "Release the bowl onto the surface of the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl from table center and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Position the robotic arm at the center of the table", "expected_effect": "gripper positioned at the center of the table"},
+        {"step": 2, "action_type": "move", "subgoal": "Extend the arm toward the black bowl", "expected_effect": "gripper enclosing the black bowl securely"},
+        {"step": 3, "action_type": "pick", "subgoal": "Lift the black bowl off the table surface", "expected_effect": "black bowl raised above the table surface"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the gripper above the plate", "expected_effect": "gripper aligned above the plate surface"},
+        {"step": 5, "action_type": "place", "subgoal": "Lower the black bowl onto the plate", "expected_effect": "black bowl resting on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Move the gripper over the wooden cabinet", "expected_effect": "robot base positioned on top of the wooden cabinet"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the top drawer handle with the end-effector", "expected_effect": "gripper aligned with the top drawer handle"},
+        {"step": 3, "action_type": "open", "subgoal": "Pull the top drawer outward", "expected_effect": "top drawer fully opened"},
+        {"step": 4, "action_type": "move", "subgoal": "Insert the manipulator into the open drawer", "expected_effect": "gripper inside the top drawer"},
+        {"step": 5, "action_type": "pick", "subgoal": "Retrieve the black bowl from inside the drawer", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 6, "action_type": "move", "subgoal": "Position the gripper above the plate", "expected_effect": "gripper positioned above the plate surface"},
+        {"step": 7, "action_type": "place", "subgoal": "Set the black bowl down on the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 8, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl next to the cookie box and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the gripper above the black bowl adjacent to the cookie box", "expected_effect": "robot base positioned on top of the black bowl which next to the cookie box"},
+        {"step": 2, "action_type": "pick", "subgoal": "Pick up the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Navigate the arm to the plate", "expected_effect": "gripper positioned above the plate surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Release the bowl upon the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 5, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl next to the plate and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Align the end-effector directly over the plate", "expected_effect": "robot base positioned on top of the plate"},
+        {"step": 2, "action_type": "move", "subgoal": "Direct the arm toward the black bowl", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Grasp the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the gripper back over the plate", "expected_effect": "gripper positioned above the plate surface"},
+        {"step": 5, "action_type": "place", "subgoal": "Drop the bowl onto the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl next to the ramekin and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the manipulator to the location of the black bowl", "expected_effect": "gripper positioned next to the black bowl"},
+        {"step": 2, "action_type": "pick", "subgoal": "Clamp the gripper onto the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Shift the gripper to the plate's location", "expected_effect": "gripper positioned above the plate"},
+        {"step": 4, "action_type": "place", "subgoal": "Set the bowl down on the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 5, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl on the cookie box and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Position the robotic arm over the cookie box", "expected_effect": "robot base positioned on top of the cookie box"},
+        {"step": 2, "action_type": "move", "subgoal": "Lower the end-effector to the black bowl", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Lift the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the arm to the plate area", "expected_effect": "gripper positioned above the plate"},
+        {"step": 5, "action_type": "place", "subgoal": "Place the bowl onto the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl on the ramekin and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the gripper directly above the ramekin", "expected_effect": "robot base positioned on top of the ramekin"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the manipulator with the black bowl", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Retrieve the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Navigate the end-effector over the plate", "expected_effect": "gripper positioned above the plate"},
+        {"step": 5, "action_type": "place", "subgoal": "Release the bowl onto the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl on the stove and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm to the top of the stove", "expected_effect": "robot base positioned on top of the stove"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the black bowl with the gripper", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Grasp the black bowl from the stove", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Shift the robotic arm to the plate", "expected_effect": "gripper positioned above the plate"},
+        {"step": 5, "action_type": "place", "subgoal": "Lower the bowl onto the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "spatial",
+    "instruction": {
+      "raw": "pick up the black bowl on the wooden cabinet and place it on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the gripper over the wooden cabinet", "expected_effect": "robot base positioned on top of the wooden cabinet"},
+        {"step": 2, "action_type": "move", "subgoal": "Extend the arm to the black bowl", "expected_effect": "gripper aligned with the black bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Pick up the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Position the end-effector above the plate", "expected_effect": "gripper positioned above the plate"},
+        {"step": 5, "action_type": "place", "subgoal": "Set the bowl down on the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the alphabet soup and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the manipulator above the alphabet soup", "expected_effect": "robot base positioned above the alphabet soup"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the gripper with the alphabet soup can", "expected_effect": "gripper aligned with the alphabet soup"},
+        {"step": 3, "action_type": "pick", "subgoal": "Lift the alphabet soup", "expected_effect": "robot holds the alphabet soup securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the arm above the basket", "expected_effect": "robot base positioned above the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Direct the end-effector toward the basket opening", "expected_effect": "gripper aligned with the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Release the alphabet soup into the basket", "expected_effect": "alphabet soup stably placed in the basket"},
+        {"step": 7, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the bbq sauce and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Position the gripper over the bbq sauce bottle", "expected_effect": "robot base positioned on top of the bbq sauce"},
+        {"step": 2, "action_type": "move", "subgoal": "Lower the arm to the bbq sauce", "expected_effect": "gripper aligned with the bbq sauce"},
+        {"step": 3, "action_type": "pick", "subgoal": "Grasp the bbq sauce bottle", "expected_effect": "robot holds the bbq sauce securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Navigate the robotic arm over the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Align the manipulator with the basket interior", "expected_effect": "gripper aligned with the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Drop the bbq sauce into the basket", "expected_effect": "bbq sauce stably placed in the basket"},
+        {"step": 7, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the butter and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the end-effector to the top of the butter container", "expected_effect": "robot base positioned on top of the butter container"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the butter container with the arm", "expected_effect": "gripper aligned with the butter container"},
+        {"step": 3, "action_type": "pick", "subgoal": "Retrieve the butter", "expected_effect": "robot holds the butter securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Shift the gripper above the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "place", "subgoal": "Lower the butter into the basket", "expected_effect": "butter stably placed in the basket surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the chocolate pudding and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the arm over the chocolate pudding", "expected_effect": "robot base positioned above the chocolate pudding"},
+        {"step": 2, "action_type": "move", "subgoal": "Extend the end-effector to the pudding", "expected_effect": "gripper aligned with the chocolate pudding"},
+        {"step": 3, "action_type": "pick", "subgoal": "Clamp the gripper onto the chocolate pudding", "expected_effect": "robot holds the chocolate pudding securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Position the manipulator above the basket", "expected_effect": "robot base positioned above the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Navigate the gripper to the basket opening", "expected_effect": "gripper aligned with the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Place the chocolate pudding inside the basket", "expected_effect": "chocolate pudding stably placed in the basket"},
+        {"step": 7, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the cream cheese and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Align the robotic arm over the cream cheese box", "expected_effect": "robot base positioned on top of the cream cheese"},
+        {"step": 2, "action_type": "move", "subgoal": "Lower the gripper to the cream cheese", "expected_effect": "gripper aligned with the cream cheese"},
+        {"step": 3, "action_type": "pick", "subgoal": "Pick up the cream cheese", "expected_effect": "robot holds the cream cheese securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the end-effector above the basket", "expected_effect": "robot base positioned above the basket"},
+        {"step": 5, "action_type": "place", "subgoal": "Set the cream cheese down in the basket", "expected_effect": "cream cheese stably placed in the basket"},
+        {"step": 6, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the ketchup and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the gripper to the ketchup bottle", "expected_effect": "gripper positioned above the ketchup bottle"},
+        {"step": 2, "action_type": "pick", "subgoal": "Grasp the ketchup bottle", "expected_effect": "ketchup bottle securely held by the gripper"},
+        {"step": 3, "action_type": "move", "subgoal": "Move the arm over the basket", "expected_effect": "gripper positioned above the basket"},
+        {"step": 4, "action_type": "place", "subgoal": "Release the ketchup bottle into the basket", "expected_effect": "ketchup bottle placed inside the basket"},
+        {"step": 5, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the milk and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Position the end-effector on top of the milk carton", "expected_effect": "robot base positioned on top of the milk carton"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the milk carton with the manipulator", "expected_effect": "gripper aligned with the milk carton"},
+        {"step": 3, "action_type": "pick", "subgoal": "Lift the milk carton", "expected_effect": "robot holds the milk carton securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Hover the gripper above the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "place", "subgoal": "Lower the milk carton into the basket", "expected_effect": "milk carton stably placed in the basket surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the orange juice and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm over the orange juice", "expected_effect": "robot base positioned on top of the orange juice"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the gripper with the orange juice carton", "expected_effect": "gripper aligned with the orange juice"},
+        {"step": 3, "action_type": "pick", "subgoal": "Retrieve the orange juice", "expected_effect": "robot holds the orange juice securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Shift the robotic arm above the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Position the end-effector over the basket", "expected_effect": "gripper aligned with the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Place the orange juice inside the basket", "expected_effect": "orange juice stably placed in the basket"},
+        {"step": 7, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the salad dressing and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the gripper to the top of the salad dressing container", "expected_effect": "robot base positioned on top of the salad dressing container"},
+        {"step": 2, "action_type": "move", "subgoal": "Extend the arm to the container", "expected_effect": "gripper aligned with the salad dressing container"},
+        {"step": 3, "action_type": "pick", "subgoal": "Grasp the salad dressing", "expected_effect": "robot holds the salad dressing securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Translate the manipulator over the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "place", "subgoal": "Drop the salad dressing into the basket", "expected_effect": "salad dressing stably placed in the basket"},
+        {"step": 6, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "object",
+    "instruction": {
+      "raw": "pick up the tomato sauce and place it in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the end-effector over the tomato sauce", "expected_effect": "robot base positioned on top of the tomato sauce"},
+        {"step": 2, "action_type": "move", "subgoal": "Lower the gripper to the tomato sauce can", "expected_effect": "gripper aligned with the tomato sauce"},
+        {"step": 3, "action_type": "pick", "subgoal": "Pick up the tomato sauce", "expected_effect": "robot holds the tomato sauce securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Position the arm above the basket", "expected_effect": "robot base positioned on top of the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Align the manipulator with the basket opening", "expected_effect": "gripper aligned with the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Set the tomato sauce down in the basket", "expected_effect": "tomato sauce stably placed in the basket"},
+        {"step": 7, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "open the middle drawer of the cabinet",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the robotic arm over the cabinet", "expected_effect": "robot base positioned on top of the cabinet"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the middle drawer handle with the gripper", "expected_effect": "gripper aligned with the middle drawer handle"},
+        {"step": 3, "action_type": "open", "subgoal": "Pull the middle drawer outward", "expected_effect": "middle drawer fully opened"},
+        {"step": 4, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "open the top drawer and put the bowl inside",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Position the end-effector above the drawer", "expected_effect": "robot base positioned on top of the drawer"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the manipulator with the drawer handle", "expected_effect": "gripper aligned with the drawer handle"},
+        {"step": 3, "action_type": "open", "subgoal": "Pull the drawer open", "expected_effect": "drawer fully opened"},
+        {"step": 4, "action_type": "move", "subgoal": "Insert the arm into the drawer", "expected_effect": "gripper inside the drawer"},
+        {"step": 5, "action_type": "pick", "subgoal": "Retrieve the bowl from the drawer", "expected_effect": "robot holds the bowl securely"},
+        {"step": 6, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "push the plate to the front of the stove",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the gripper over the plate", "expected_effect": "robot base positioned on top of the plate"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the end-effector with the front edge of the plate", "expected_effect": "gripper aligned with the front edge of the plate"},
+        {"step": 3, "action_type": "push", "subgoal": "Slide the plate forward toward the stove", "expected_effect": "plate moved to the front of the stove"},
+        {"step": 4, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the bowl on the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm over the bowl", "expected_effect": "robot base positioned on top of the bowl"},
+        {"step": 2, "action_type": "pick", "subgoal": "Grasp the bowl", "expected_effect": "robot holds the bowl securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Translate the gripper above the plate", "expected_effect": "gripper aligned above the plate surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Set the bowl down on the plate", "expected_effect": "bowl stably placed on the plate surface"},
+        {"step": 5, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the bowl on the stove",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the end-effector over the bowl", "expected_effect": "robot base positioned on top of the bowl"},
+        {"step": 2, "action_type": "pick", "subgoal": "Lift the bowl", "expected_effect": "robot holds the bowl securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Position the manipulator above the stove", "expected_effect": "gripper aligned above the stove surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Release the bowl onto the stove", "expected_effect": "bowl stably placed on the stove surface"},
+        {"step": 5, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the bowl on top of the cabinet",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the robotic arm over the cabinet", "expected_effect": "robot base positioned on top of the cabinet"},
+        {"step": 2, "action_type": "move", "subgoal": "Lower the gripper to the bowl", "expected_effect": "gripper aligned with the bowl"},
+        {"step": 3, "action_type": "pick", "subgoal": "Pick up the bowl", "expected_effect": "robot holds the bowl securely"},
+        {"step": 4, "action_type": "move", "subgoal": "Shift the end-effector above the cabinet handle", "expected_effect": "gripper positioned above the cabinet handle"},
+        {"step": 5, "action_type": "place", "subgoal": "Place the bowl on top of the cabinet", "expected_effect": "bowl stably placed on top of the cabinet"},
+        {"step": 6, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the cream cheese in the bowl",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Align the gripper over the cream cheese", "expected_effect": "robot base positioned on top of the cream cheese"},
+        {"step": 2, "action_type": "pick", "subgoal": "Clamp the gripper onto the cream cheese box", "expected_effect": "gripper securely holding the cream cheese"},
+        {"step": 3, "action_type": "move", "subgoal": "Translate the arm above the bowl", "expected_effect": "gripper positioned above the bowl"},
+        {"step": 4, "action_type": "place", "subgoal": "Drop the cream cheese into the bowl", "expected_effect": "cream cheese inside the bowl"},
+        {"step": 5, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the wine bottle on the rack",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the end-effector to the wine bottle", "expected_effect": "gripper positioned near the wine bottle"},
+        {"step": 2, "action_type": "pick", "subgoal": "Grasp the wine bottle", "expected_effect": "gripper securely holding the wine bottle"},
+        {"step": 3, "action_type": "move", "subgoal": "Move the manipulator to the rack", "expected_effect": "gripper positioned above the rack"},
+        {"step": 4, "action_type": "place", "subgoal": "Set the wine bottle down on the rack", "expected_effect": "wine bottle stably placed on the rack surface"},
+        {"step": 5, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "put the wine bottle on top of the cabinet",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm to the wine bottle", "expected_effect": "gripper positioned near the wine bottle"},
+        {"step": 2, "action_type": "pick", "subgoal": "Retrieve the wine bottle", "expected_effect": "robot holds the wine bottle securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Position the gripper at the cabinet top", "expected_effect": "gripper aligned with the cabinet top surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Place the wine bottle on the cabinet top", "expected_effect": "wine bottle stably placed on the cabinet top"},
+        {"step": 5, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "goal",
+    "instruction": {
+      "raw": "turn on the stove",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the robotic base near the stove", "expected_effect": "robot base positioned near the stove"},
+        {"step": 2, "action_type": "move", "subgoal": "Align the gripper with the stove knob", "expected_effect": "gripper aligned with the stove knob"},
+        {"step": 3, "action_type": "turn", "subgoal": "Rotate the stove knob clockwise", "expected_effect": "stove knob rotated to the right position"},
+        {"step": 4, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "turn on the stove and put the moka pot on it",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Move the end-effector to the stove control panel", "expected_effect": "robot base positioned near the stove control panel"},
+        {"step": 2, "action_type": "turn", "subgoal": "Rotate the stove knob to the on position", "expected_effect": "stove knob rotated to the on position"},
+        {"step": 3, "action_type": "move", "subgoal": "Shift the arm to the moka pot", "expected_effect": "robot base positioned near the moka pot"},
+        {"step": 4, "action_type": "pick", "subgoal": "Lift the moka pot", "expected_effect": "robot holds the moka pot securely"},
+        {"step": 5, "action_type": "place", "subgoal": "Set the moka pot down on the stove", "expected_effect": "moka pot positioned on the stove surface"},
+        {"step": 6, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put the black bowl in the bottom drawer of the cabinet and close it",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the gripper over the cabinet", "expected_effect": "robot base positioned on top of the cabinet"},
+        {"step": 2, "action_type": "move", "subgoal": "Target the drawer handle with the manipulator", "expected_effect": "gripper aligned with the drawer handle"},
+        {"step": 3, "action_type": "open", "subgoal": "Pull the drawer open", "expected_effect": "drawer fully opened and accessible"},
+        {"step": 4, "action_type": "move", "subgoal": "Insert the arm into the drawer compartment", "expected_effect": "gripper inside the drawer compartment"},
+        {"step": 5, "action_type": "pick", "subgoal": "Grasp the black bowl", "expected_effect": "robot holds the black bowl securely"},
+        {"step": 6, "action_type": "place", "subgoal": "Release the bowl inside the drawer", "expected_effect": "black bowl stably placed inside the drawer"},
+        {"step": 7, "action_type": "close", "subgoal": "Push the drawer shut", "expected_effect": "drawer fully closed and sealed"},
+        {"step": 8, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put the yellow and white mug in the microwave and close it",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the end-effector to the yellow and white mug", "expected_effect": "gripper positioned near the yellow and white mug"},
+        {"step": 2, "action_type": "pick", "subgoal": "Pick up the yellow and white mug", "expected_effect": "robot holds the yellow and white mug securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Align the arm with the microwave opening", "expected_effect": "gripper aligned with the microwave opening"},
+        {"step": 4, "action_type": "place", "subgoal": "Place the mug inside the microwave", "expected_effect": "mug stably placed inside the microwave"},
+        {"step": 5, "action_type": "move", "subgoal": "Position the gripper against the microwave door", "expected_effect": "gripper positioned on top of the microwave door"},
+        {"step": 6, "action_type": "close", "subgoal": "Push the microwave door to close it", "expected_effect": "microwave door fully closed"},
+        {"step": 7, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put both moka pots on the stove",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the gripper above the left moka pot", "expected_effect": "gripper positioned above the left moka pot"},
+        {"step": 2, "action_type": "pick", "subgoal": "Retrieve the left moka pot", "expected_effect": "left moka pot securely held by the gripper"},
+        {"step": 3, "action_type": "move", "subgoal": "Translate the manipulator to the stove", "expected_effect": "gripper above the stove surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Lower the left moka pot onto the stove", "expected_effect": "left moka pot stably placed on the stove"},
+        {"step": 5, "action_type": "move", "subgoal": "Direct the arm to the right moka pot", "expected_effect": "gripper positioned above the right moka pot"},
+        {"step": 6, "action_type": "pick", "subgoal": "Grasp the right moka pot", "expected_effect": "right moka pot securely held by the gripper"},
+        {"step": 7, "action_type": "move", "subgoal": "Shift the end-effector to the stove", "expected_effect": "gripper above the stove surface"},
+        {"step": 8, "action_type": "place", "subgoal": "Set the right moka pot down on the stove", "expected_effect": "right moka pot stably placed on the stove"},
+        {"step": 9, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put both the alphabet soup and the cream cheese box in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Align the robotic arm over the alphabet soup", "expected_effect": "gripper positioned above the alphabet soup"},
+        {"step": 2, "action_type": "pick", "subgoal": "Lift the alphabet soup", "expected_effect": "robot holds the alphabet soup securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Navigate the gripper over the basket", "expected_effect": "gripper positioned above the basket"},
+        {"step": 4, "action_type": "place", "subgoal": "Drop the alphabet soup into the basket", "expected_effect": "alphabet soup stably placed in the basket"},
+        {"step": 5, "action_type": "move", "subgoal": "Position the end-effector above the cream cheese box", "expected_effect": "gripper positioned above the cream cheese box"},
+        {"step": 6, "action_type": "pick", "subgoal": "Pick up the cream cheese box", "expected_effect": "robot holds the cream cheese box securely"},
+        {"step": 7, "action_type": "move", "subgoal": "Hover the manipulator over the basket", "expected_effect": "gripper positioned above the basket"},
+        {"step": 8, "action_type": "place", "subgoal": "Release the cream cheese box into the basket", "expected_effect": "cream cheese box stably placed in the basket"},
+        {"step": 9, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put both the alphabet soup and the tomato sauce in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Move the gripper to the alphabet soup", "expected_effect": "gripper positioned above the alphabet soup"},
+        {"step": 2, "action_type": "pick", "subgoal": "Grasp the alphabet soup", "expected_effect": "robot holds the alphabet soup securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Shift the arm to the tomato sauce", "expected_effect": "gripper positioned above the tomato sauce"},
+        {"step": 4, "action_type": "pick", "subgoal": "Retrieve the tomato sauce", "expected_effect": "robot holds the tomato sauce securely"},
+        {"step": 5, "action_type": "move", "subgoal": "Translate the end-effector to the basket", "expected_effect": "gripper positioned above the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Place the alphabet soup in the basket", "expected_effect": "alphabet soup stably placed in the basket"},
+        {"step": 7, "action_type": "place", "subgoal": "Lower the tomato sauce into the basket", "expected_effect": "tomato sauce stably placed in the basket"},
+        {"step": 8, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put both the cream cheese box and the butter in the basket",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm over the cream cheese box", "expected_effect": "gripper positioned above the cream cheese box"},
+        {"step": 2, "action_type": "pick", "subgoal": "Pick up the cream cheese box", "expected_effect": "robot holds the cream cheese box securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Navigate the gripper to the butter", "expected_effect": "gripper positioned above the butter"},
+        {"step": 4, "action_type": "pick", "subgoal": "Clamp the gripper onto the butter", "expected_effect": "robot holds the butter securely"},
+        {"step": 5, "action_type": "move", "subgoal": "Align the manipulator with the basket", "expected_effect": "gripper positioned above the basket"},
+        {"step": 6, "action_type": "place", "subgoal": "Set the cream cheese box down in the basket", "expected_effect": "cream cheese box stably placed in the basket"},
+        {"step": 7, "action_type": "place", "subgoal": "Release the butter into the basket", "expected_effect": "butter stably placed in the basket"},
+        {"step": 8, "action_type": "return", "subgoal": "Retract the arm to its neutral pose", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Hover the end-effector over the white mug", "expected_effect": "robot base positioned on top of the white mug"},
+        {"step": 2, "action_type": "pick", "subgoal": "Lift the white mug", "expected_effect": "robot holds the white mug securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Position the arm over the left plate", "expected_effect": "gripper aligned with the left plate surface"},
+        {"step": 4, "action_type": "place", "subgoal": "Place the white mug on the left plate", "expected_effect": "white mug stably placed on the left plate surface"},
+        {"step": 5, "action_type": "move", "subgoal": "Translate the gripper over the yellow mug", "expected_effect": "robot base positioned on top of the yellow mug"},
+        {"step": 6, "action_type": "pick", "subgoal": "Grasp the yellow mug", "expected_effect": "robot holds the yellow mug securely"},
+        {"step": 7, "action_type": "move", "subgoal": "Direct the manipulator back to the white mug area", "expected_effect": "robot base positioned on top of the white mug"},
+        {"step": 8, "action_type": "pick", "subgoal": "Retrieve the white mug", "expected_effect": "robot holds the white mug securely"},
+        {"step": 9, "action_type": "move", "subgoal": "Shift the arm to the right plate", "expected_effect": "gripper aligned with the right plate surface"},
+        {"step": 10, "action_type": "place", "subgoal": "Lower the mugs onto the right plate", "expected_effect": "yellow and white mugs stably placed on the right plate surface"},
+        {"step": 11, "action_type": "return", "subgoal": "Return the manipulator to the home configuration", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Navigate the gripper above the white mug", "expected_effect": "gripper positioned above the white mug"},
+        {"step": 2, "action_type": "pick", "subgoal": "Pick up the white mug", "expected_effect": "robot holds the white mug securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Align the end-effector with the plate", "expected_effect": "gripper positioned above the plate"},
+        {"step": 4, "action_type": "place", "subgoal": "Set the white mug down on the plate", "expected_effect": "white mug stably placed on the plate surface"},
+        {"step": 5, "action_type": "move", "subgoal": "Hover the arm over the chocolate pudding", "expected_effect": "gripper positioned above the chocolate pudding"},
+        {"step": 6, "action_type": "pick", "subgoal": "Grasp the chocolate pudding", "expected_effect": "robot holds the chocolate pudding securely"},
+        {"step": 7, "action_type": "move", "subgoal": "Translate the manipulator to the right side of the plate", "expected_effect": "gripper positioned to the right of the plate"},
+        {"step": 8, "action_type": "place", "subgoal": "Release the chocolate pudding beside the plate", "expected_effect": "chocolate pudding stably placed to the right of the plate surface"},
+        {"step": 9, "action_type": "return", "subgoal": "Reset the robotic base to the starting position", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  },
+  {
+    "suite": "long",
+    "instruction": {
+      "raw": "pick up the book and place it in the back compartment of the caddy",
+      "plan": [
+        {"step": 1, "action_type": "move", "subgoal": "Direct the arm to the location of the book", "expected_effect": "gripper positioned above the book"},
+        {"step": 2, "action_type": "pick", "subgoal": "Lift the book", "expected_effect": "robot holds the book securely"},
+        {"step": 3, "action_type": "move", "subgoal": "Position the gripper over the back compartment of the caddy", "expected_effect": "gripper aligned with the back compartment of the caddy"},
+        {"step": 4, "action_type": "place", "subgoal": "Drop the book into the back compartment", "expected_effect": "book stably placed in the back compartment of the caddy"},
+        {"step": 5, "action_type": "return", "subgoal": "Move back to the default resting state", "expected_effect": "robot back at neutral home pose"}
+      ]
+    }
+  }
+]

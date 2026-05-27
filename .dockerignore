@@ -1,0 +1,63 @@
+# Keep docker build context small (the build COPYs the whole repo into /workspace).
+
+# VCS / editor
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Python build artifacts
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.eggs
+build
+dist
+
+# Local caches & venvs
+.venv
+venv
+env
+.cache
+.mypy_cache
+.pytest_cache
+.ruff_cache
+
+# Logs / experiment outputs (keep these on host, not in image)
+logs
+wandb
+SimpleVLA-RL/exp_out
+SimpleVLA-RL/.cache
+SimpleVLA-RL/my_rl_pkgs
+SimpleVLA-RL/slurm/logs
+
+# Container artifacts (don't recursively bake images into images)
+*.sif
+*.sqsh
+*.tar
+*.tar.gz
+
+# Datasets / checkpoints (mount these at runtime — never bake)
+ckpt
+ckpoints
+landmarked_ckpoints
+modified_libero_rlds
+*.pt
+*.pth
+*.safetensors
+*.bin
+APD_plans_scaled.json
+
+# Large media
+*.mp4
+*.avi
+*.mov
+
+# Misc
+*.log
+*.tmp
+.DS_Store
