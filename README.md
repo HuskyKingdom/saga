@@ -1,7 +1,7 @@
 # SAGA: Subgoal-Aligned Advantage Estimation for Spatial Generalization
 
 
-[![🤗 Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-Hugging%20Face-yellow)](https://huggingface.co/TODO/SAGA)
+[![🤗 Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-Hugging%20Face-yellow)](https://huggingface.co/SCPTo/saga-libero-pro-all-tasksuite)
 [![🤗 Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Hugging%20Face-yellow)](https://huggingface.co/datasets/SCPTo/lerobot_saga)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
